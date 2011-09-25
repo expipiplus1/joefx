@@ -1,0 +1,23 @@
+technique technique0
+{
+    pass pass0
+    {
+        VertexProgram = "passthrough.glslv";
+        FragmentProgram = "passthrough.glslv";
+    }
+}
+
+technique technique1
+{
+    pass pass0
+    {
+        VertexProgram = "passthrough.glslv";
+        FragmentProgram = "passthrough.glslv";
+    }
+
+    pass pass1
+    {
+        VertexProgram = "passthrough.glslv";
+        FragmentProgram = "passthrough.glslv";
+    }
+}
