@@ -1,47 +1,52 @@
 #!/usr/bin/env python3
 
 import struct
+import sys
 
-frag_shader = """
-                #version 330
-
-                out vec4 output_color;
-
-                void main()
-                {
-                    output_color = vec4( 0.0f, 0.0f, 1.0f, 1.0f );
-                }
-              """
-
-vert_shader = """
-                #version 330
-
-                layout (location = 0) in vec4 position;
-
-                void main()
-                {
-                    gl_Position = position;
-                }
-              """
+from jfx_parser import Parse
 
 int_struct = struct.Struct( "I" )
 
+def WriteInt( i, f ):
+    s = int_struct.pack( i )
+    f.write( s )
+
+def WriteString( s, f ):
+    l = int_struct.pack( len( s ) )
+    f.write( l )
+    f.write( bytes( s, "ascii" ) )
+
 def main():
-    fout = open( "blue.jfxc", "wb" ) 
+    if len( sys.argv ) < 2:
+        print( "Need a file" )
+        return
 
-    jfxc_magic = int_struct.pack( 0x4358464A )
-    jfxc_version = int_struct.pack( 1 )
+    effect = Parse( sys.argv[1] )
+    if effect is None:
+        return
+    
+    jfxc_magic = 0x4358464A
+    jfxc_version = 2
+    
+    fout = open( "passthrough.jfxc", "wb" ) 
 
-    fout.write( jfxc_magic )
-    fout.write( jfxc_version )
+    WriteInt( jfxc_magic, fout )
+    WriteInt( jfxc_version, fout )
 
-    vert_length = int_struct.pack( len( vert_shader ) )
-    frag_length = int_struct.pack( len( frag_shader ) )
+    WriteInt( len( effect.techniques ), fout )
 
-    fout.write( vert_length )
-    fout.write( bytes( vert_shader, "ascii" ) )
-    fout.write( frag_length )
-    fout.write( bytes( frag_shader, "ascii" ) )
+    for t in effect.techniques:
+        WriteString( t.name, fout )
+
+        WriteInt( len( t.passes ), fout )
+        for p in t.passes:
+            WriteString( p.name, fout )
+
+            WriteInt( len( p.state_assignments ), fout )
+            for s in p.state_assignments:
+                WriteString( s.assignee, fout )
+                WriteString( s.value, fout )
+
     fout.close()
 
 if __name__ == "__main__":
