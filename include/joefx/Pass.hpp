@@ -35,7 +35,7 @@
 #include <joemath/joemath.hpp>
 #include <joefx/state_assignment.hpp>
 
-using namespace NJoeMath;
+using namespace JoeMath;
 using namespace JoeFile;
 
 namespace JoeFx

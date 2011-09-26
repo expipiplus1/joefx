@@ -34,7 +34,7 @@
 #include <joefile/input_stream.hpp>
 
 using namespace JoeFile;
-using namespace NJoeMath;
+using namespace JoeMath;
 
 namespace JoeFx
 {

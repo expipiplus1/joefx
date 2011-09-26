@@ -33,7 +33,7 @@
 #include <joefile/input_stream.hpp>
 #include <joemath/joemath.hpp>
 
-using namespace NJoeMath;
+using namespace JoeMath;
 using namespace JoeFile;
 
 namespace JoeFx
