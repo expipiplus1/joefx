@@ -28,32 +28,13 @@
 
 #pragma once
 
-#include <string>
-#include <vector>
-#include <joefx/effect.hpp>
-
 namespace JoeFx
 {
-    class Context
+    class StateAssignment
     {
     public:
-                            Context                   ( );
-                            Context                   ( Context&& other );
-        Context&            operator =                ( Context&& other );
-                            ~Context                  ( );
-
-        bool                Init                      ();
-
-        Effect*             LoadCompiledEffect        ( std::string filename );
-
+                            StateAssignment                   ( );
+                            ~StateAssignment                  ( );
     private:
-        bool m_initialized = false;
-        std::vector<Effect*> m_effects;
-
-        //
-        // Don't allow copying of contexts, they contain opengl resources
-        //
-                            Context                   ( const Context&   )                          = delete;
-        Context&          operator =                  ( const Context&   )                          = delete;
     };
 }

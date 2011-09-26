@@ -6,6 +6,9 @@ from modgrammar import Terminal, error_result
 import re
 from sys import *
 
+shader_enumerations = { "FragmentProgram" : 0,
+                        "VertexProgram"   : 1 }
+
 class END_OF_WORD( Terminal ):
     grammar_collapse = True
     grammar_collapse_skip = True
@@ -85,12 +88,33 @@ class StateAssignment( Grammar ):
         self.assignee = self[0].string
         self.value = self[2].value
 
+class ShaderType( Grammar ):
+    grammar = OR( "FragmentProgram",
+                  "VertexProgram" )
+
+    def elem_init( self, k ):
+        self.shader_type = shader_enumerations[ self.string ]
+
+class ShaderAssignment( Grammar ):
+    grammar = ShaderType, "=", "load", StringLiteral, ";"
+
+    def elem_init( self, k ):
+        self.shader_type = self[0].shader_type
+        self.filename = self[3].value
+
 class Pass( Grammar ):
-    grammar = "pass", Identifier, "{", REPEAT( StateAssignment, min = 0 ), "}"
+    grammar = "pass", Identifier, "{", REPEAT( OR( StateAssignment,
+                                                   ShaderAssignment ), min = 0 ), "}"
 
     def elem_init( self, k ):
         self.name = self[1].string 
-        self.state_assignments = self[3].elements
+        self.state_assignments = []
+        self.shader_assignments = []
+        for s in self[3].elements:
+            if isinstance( s, ShaderAssignment ):
+                self.shader_assignments.append( s )
+            elif isinstance( s, StateAssignment ):
+                self.state_assignments.append( s )
 
 class Technique( Grammar ):
     grammar = "technique", Identifier, "{", REPEAT( Pass, min = 0 ), "}"

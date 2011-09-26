@@ -30,24 +30,32 @@
 
 #include <string>
 #include <vector>
+#include <joefile/input_stream.hpp>
+#include <joefx/pass.hpp>
 
-namespace NJoeFx
+using namespace JoeFile;
+
+namespace JoeFx
 {
     class Technique
     {
     public:
                             Technique                   ( );
+                            Technique                   ( Technique&& other );
+        Technique&          operator =                  ( Technique&& other );
                             ~Technique                  ( );
+
+        bool                LoadFromInputStream         ( InputStream& input_stream );
+
+    private:
+        bool                m_initialized = false;
+        std::string         m_name;
+        std::vector<Pass>   m_passes;
 
         //
         // Don't allow copying of contexts, they contain opengl resources
         //
                             Technique                   ( const Technique&   )  = delete;
         Technique&          operator =                  ( const Technique&   )  = delete;
-
-    private:
-        bool                m_initialized = false;
-        std::string         m_name;
-        std::vector<Pass*>  m_passes;
     };
-};
+}

@@ -17,8 +17,8 @@ def WriteString( s, f ):
     f.write( bytes( s, "ascii" ) )
 
 def main():
-    if len( sys.argv ) < 2:
-        print( "Need a file" )
+    if len( sys.argv ) < 3:
+        print( "Need an input and output file" )
         return
 
     effect = Parse( sys.argv[1] )
@@ -26,9 +26,9 @@ def main():
         return
     
     jfxc_magic = 0x4358464A
-    jfxc_version = 2
+    jfxc_version = 3
     
-    fout = open( "passthrough.jfxc", "wb" ) 
+    fout = open( sys.argv[2], "wb" ) 
 
     WriteInt( jfxc_magic, fout )
     WriteInt( jfxc_version, fout )
@@ -41,6 +41,11 @@ def main():
         WriteInt( len( t.passes ), fout )
         for p in t.passes:
             WriteString( p.name, fout )
+
+            WriteInt( len( p.shader_assignments ), fout )
+            for s in p.shader_assignments:
+                WriteInt( s.shader_type, fout )
+                WriteString( s.filename, fout )
 
             WriteInt( len( p.state_assignments ), fout )
             for s in p.state_assignments:

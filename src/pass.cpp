@@ -26,49 +26,87 @@
     or implied, of Joe Hermaszewski.
 */
 
-#pragma once
+#include <joefx/pass.hpp>
 
+#include <iostream>
 #include <string>
-#include <vector>
-#include <gl/GLee.h>
 #include <joefile/input_stream.hpp>
 #include <joemath/joemath.hpp>
-#include <joefx/state_assignment.hpp>
 
 using namespace NJoeMath;
 using namespace JoeFile;
 
 namespace JoeFx
 {
-    enum ShaderDomain : u32
+    Pass::Pass ()
     {
-        FRAGMENT_DOMAIN = 0,
-        VERTEX_DOMAIN = 1
-    };
+    }
 
-    class Pass
+    Pass::Pass ( Pass&& other )
     {
-    public:
-                            Pass                   ( );
-                            Pass                   ( Pass&& other );
-        Pass&               operator =             ( Pass&& other );
-                            ~Pass                  ( );
-    
-        bool                LoadFromInputStream    ( InputStream& input_stream );
+        *this = std::move( other );
+    }
 
-    private:
-        bool                            m_initialized = false;
-        std::string                     m_name;
-        std::vector<StateAssignment>    m_stateAssignments;
-        std::vector<GLuint>             m_shaders;
-        GLuint                          m_program;
+    Pass&   Pass::operator= ( Pass&& other )
+    {
+        bool initialized = other.m_initialized;
+        other.m_initialized = false;
+        m_initialized = initialized;
+        m_name = std::move( other.m_name );
+        m_shaders = std::move( other.m_shaders );
+        m_stateAssignments = std::move( other.m_stateAssignments );
+        m_program = std::move( other.m_program );
 
-        static GLuint                   LoadShader ( ShaderDomain domain, std::string filename );
+        return *this;
+    }
 
-        //
-        // Don't allow copying of passes, they contain opengl resources
-        //
-                            Pass                   ( const Pass&   )  = delete;
-        Pass&          operator =                  ( const Pass&   )  = delete;
-    };
+    Pass::~Pass ()
+    {
+    }
+
+    bool Pass::LoadFromInputStream( InputStream& input_stream )
+    {
+        input_stream >> m_name;
+
+        u32 num_shaders;
+        input_stream >> num_shaders;
+
+        m_shaders.resize( num_shaders );
+         
+        std::cout << "num shaders: " << num_shaders << std::endl;
+
+        for( auto& s : m_shaders )
+        {
+            ShaderDomain domain;
+            input_stream >> domain;
+
+            std::string filename;
+            input_stream >> filename;
+
+            s = LoadShader( domain, filename ); 
+        }
+
+        u32 num_state_assignments;
+        input_stream >> num_state_assignments;
+
+        m_stateAssignments.resize( num_state_assignments );
+
+        for( auto& s : m_stateAssignments )
+        {
+            std::string assignee;
+            input_stream >> assignee;
+
+            std::string value;
+            input_stream >> value;
+        }
+
+        m_initialized = true;
+        return true;
+    }
+
+    GLuint Pass::LoadShader( ShaderDomain domain, std::string filename )
+    {
+        std::cout << "Loading shader: Domain: " << domain << " file: " << filename << std::endl;
+        return 5;
+    }
 }

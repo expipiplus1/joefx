@@ -30,25 +30,32 @@
 
 #include <string>
 #include <vector>
+#include <joefx/technique.hpp>
 
-namespace NJoeFx
+namespace JoeFx
 {
     class Effect
     {
     public:
                             Effect                   ( );
+                            Effect                   ( Effect&& other );
+        Effect&             operator =               ( Effect&& other );
                             ~Effect                  ( );
+
+
+        bool                LoadFromCompiledEffect   ( const std::string filename );
+
+    private:
+        bool                    m_initialized = false;
+        std::vector<Technique>  m_techniques;
+
+        static const u32  JFXC_FILE_MAGIC = 0x4358464A;
+        static const u32  JFXC_FILE_VERSION = 3;
 
         //
         // Don't allow copying of effects, they contain opengl resources
         //
                             Effect                   ( const Effect&   )                          = delete;
         Effect&          operator =                  ( const Effect&   )                          = delete;
-
-        bool                LoadFromCompiledFile ( const std::string filename );
-
-    private:
-        bool m_initialized = false;
-        std::vector<Texhnique*> m_techniques;
     };
-};
+}

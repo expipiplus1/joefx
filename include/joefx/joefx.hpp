@@ -28,12 +28,7 @@
 
 #pragma once
 
-#include <string>
-
-namespace NJoeFX
-{
-    std::string LoadFragmentShader( const std::string filename );
-
-    std::string LoadVertexShader( const std::string filename );
-}
-
+#include <joefx/context.hpp>
+#include <joefx/effect.hpp>
+#include <joefx/technique.hpp>
+#include <joefx/pass.hpp>

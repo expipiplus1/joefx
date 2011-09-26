@@ -26,34 +26,55 @@
     or implied, of Joe Hermaszewski.
 */
 
-#pragma once
+#include <joefx/technique.hpp>
 
 #include <string>
 #include <vector>
-#include <joefx/effect.hpp>
+#include <joefile/input_stream.hpp>
 
 namespace JoeFx
 {
-    class Context
+    Technique::Technique ()
     {
-    public:
-                            Context                   ( );
-                            Context                   ( Context&& other );
-        Context&            operator =                ( Context&& other );
-                            ~Context                  ( );
+    }
 
-        bool                Init                      ();
+    Technique::Technique ( Technique&& other )
+    {
+        *this = std::move( other );
+    }
+    
+    Technique& Technique::operator = ( Technique&& other )
+    {
+        bool initialized = other.m_initialized;
+        other.m_initialized = false;
+        m_initialized = initialized;
+        m_passes = std::move( other.m_passes );
+        m_name   = std::move( other.m_name );
+        //m_name   = other.m_name;
 
-        Effect*             LoadCompiledEffect        ( std::string filename );
+        return *this;
+    }
 
-    private:
-        bool m_initialized = false;
-        std::vector<Effect*> m_effects;
+    Technique::~Technique ()
+    {
+    }
 
-        //
-        // Don't allow copying of contexts, they contain opengl resources
-        //
-                            Context                   ( const Context&   )                          = delete;
-        Context&          operator =                  ( const Context&   )                          = delete;
-    };
+    bool Technique::LoadFromInputStream ( InputStream& input_stream )
+    {
+        input_stream >> m_name;
+
+        u32 num_passes;
+        input_stream >> num_passes;
+
+        m_passes.resize( num_passes );
+
+        for( auto& p : m_passes )
+        {
+            if( !p.LoadFromInputStream( input_stream ) )
+                return false;
+        }
+
+        m_initialized = true;
+        return true;
+    }
 }

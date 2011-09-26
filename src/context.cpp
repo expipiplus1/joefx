@@ -26,34 +26,45 @@
     or implied, of Joe Hermaszewski.
 */
 
-#pragma once
+#include <joefx/context.hpp>
 
+#include <cassert>
 #include <string>
 #include <vector>
 #include <joefx/effect.hpp>
 
 namespace JoeFx
 {
-    class Context
+    Context::Context ()
     {
-    public:
-                            Context                   ( );
-                            Context                   ( Context&& other );
-        Context&            operator =                ( Context&& other );
-                            ~Context                  ( );
+    }
 
-        bool                Init                      ();
+    Context::~Context()
+    {
+        for( auto e : m_effects )
+            delete e;
+    }
 
-        Effect*             LoadCompiledEffect        ( std::string filename );
+    bool Context::Init()
+    {
+        m_initialized = true;
+        return true;
+    }
 
-    private:
-        bool m_initialized = false;
-        std::vector<Effect*> m_effects;
+    Effect*     Context::LoadCompiledEffect ( std::string filename )
+    {
+        assert( m_initialized );
 
-        //
-        // Don't allow copying of contexts, they contain opengl resources
-        //
-                            Context                   ( const Context&   )                          = delete;
-        Context&          operator =                  ( const Context&   )                          = delete;
-    };
+        Effect* effect = new Effect;
+        if( effect->LoadFromCompiledEffect( filename ) )
+        {
+            m_effects.push_back( effect );
+            return effect;
+        }
+        else
+        {
+            delete effect;
+            return nullptr;
+        }
+    }
 }

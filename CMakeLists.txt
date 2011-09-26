@@ -9,7 +9,17 @@ cmake_minimum_required(VERSION 2.8)
 include_directories(include)
 
 set(joefx_SOURCES   ${joefx_SOURCE_DIR}/src/joefx.cpp
-                    ${joefx_SOURCE_DIR}/include/joefx/joefx.hpp)
+                    ${joefx_SOURCE_DIR}/include/joefx/joefx.hpp
+                    src/context.cpp
+                    include/joefx/context.hpp
+                    src/effect.cpp
+                    include/joefx/effect.hpp
+                    src/pass.cpp
+                    include/joefx/pass.hpp
+                    src/technique.cpp
+                    include/joefx/technique.hpp
+                    src/state_assignment.cpp
+                    include/joefx/state_assignment.hpp )
 
 #
 # Create shared configuration header

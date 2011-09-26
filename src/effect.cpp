@@ -26,34 +26,55 @@
     or implied, of Joe Hermaszewski.
 */
 
-#pragma once
+#include <joefx/effect.hpp>
 
 #include <string>
 #include <vector>
-#include <joefx/effect.hpp>
+#include <joemath/joemath.hpp>
+#include <joefile/input_stream.hpp>
+
+using namespace JoeFile;
+using namespace NJoeMath;
 
 namespace JoeFx
 {
-    class Context
+    Effect::Effect ()
     {
-    public:
-                            Context                   ( );
-                            Context                   ( Context&& other );
-        Context&            operator =                ( Context&& other );
-                            ~Context                  ( );
+    }
 
-        bool                Init                      ();
+    Effect::~Effect ()
+    {
+    }
 
-        Effect*             LoadCompiledEffect        ( std::string filename );
+    bool Effect::LoadFromCompiledEffect ( const std::string filename )
+    {
+        InputStream input_stream;
+        if( !input_stream.Read( filename ) )
+            return false;
 
-    private:
-        bool m_initialized = false;
-        std::vector<Effect*> m_effects;
+        u32 magic;
+        u32 version;
 
-        //
-        // Don't allow copying of contexts, they contain opengl resources
-        //
-                            Context                   ( const Context&   )                          = delete;
-        Context&          operator =                  ( const Context&   )                          = delete;
-    };
+        input_stream >> magic;
+        if( magic != JFXC_FILE_MAGIC )
+            return false;
+
+        input_stream >> version;
+        if( version != JFXC_FILE_VERSION )
+            return false;
+
+        u32 num_techniques;
+        input_stream >> num_techniques;
+        
+        m_techniques.resize( num_techniques );
+
+        for( u32 i = 0; i < num_techniques; ++i )
+        {
+            if( !m_techniques[i].LoadFromInputStream( input_stream ) )
+                return false;
+        }
+
+        m_initialized = true;
+        return true;
+    }
 }
