@@ -45,6 +45,17 @@ namespace JoeFx
         Technique&          operator =                  ( Technique&& other );
                             ~Technique                  ( );
 
+        //
+        // Call validate on all passes
+        //
+        bool                Validate                    ( ); 
+
+        //
+        // Get the iterators to the passes
+        //
+        std::vector<Pass>::const_iterator begin ();
+        std::vector<Pass>::const_iterator end ();
+
         bool                LoadFromInputStream         ( InputStream& input_stream );
 
     private:

@@ -59,6 +59,21 @@ namespace JoeFx
     {
     }
 
+    bool Technique::Validate ()
+    {
+        return m_initialized;
+    }
+
+    std::vector<Pass>::const_iterator Technique::begin ()
+    {
+        return m_passes.begin();
+    }
+
+    std::vector<Pass>::const_iterator Technique::end ()
+    {
+        return m_passes.end();
+    }
+
     bool Technique::LoadFromInputStream ( InputStream& input_stream )
     {
         input_stream >> m_name;
