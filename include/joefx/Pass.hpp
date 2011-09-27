@@ -54,16 +54,23 @@ namespace JoeFx
         Pass&               operator =             ( Pass&& other );
                             ~Pass                  ( );
     
+        bool                Validate               ( );
+
+        void                SetState               ( ) const;
+        void                ResetState             ( ) const;
+
         bool                LoadFromInputStream    ( InputStream& input_stream );
 
     private:
         bool                            m_initialized = false;
+
         std::string                     m_name;
         std::vector<StateAssignment>    m_stateAssignments;
         std::vector<GLuint>             m_shaders;
         GLuint                          m_program;
 
-        static GLuint                   LoadShader ( ShaderDomain domain, std::string filename );
+        static GLuint                   LoadShader    ( ShaderDomain domain, std::string filename );
+        static GLuint                   CreateProgram ( const std::vector<GLuint>& shaders );
 
         //
         // Don't allow copying of passes, they contain opengl resources
