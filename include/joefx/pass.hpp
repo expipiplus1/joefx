@@ -30,7 +30,7 @@
 
 #include <string>
 #include <vector>
-#include <gl/GLee.h>
+#include <GL/GLee.h>
 #include <joefile/input_stream.hpp>
 #include <joemath/joemath.hpp>
 #include <joefx/state_assignment.hpp>
