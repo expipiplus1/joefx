@@ -31,7 +31,7 @@ set(joefx_SOURCES   ${joefx_SOURCE_DIR}/src/joefx.cpp
 configure_file(${joefx_SOURCE_DIR}/libjoefx.pc.cmake 
                ${joefx_BINARY_DIR}/libjoefx.pc @ONLY)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -W -std=c++0x -stdlib=libc++")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -W ${CXX11_FLAGS}")
 
 add_library(libjoefxStatic    STATIC    ${joefx_SOURCES})
 add_library(libjoefxShared    SHARED    ${joefx_SOURCES})
