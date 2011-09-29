@@ -59,7 +59,7 @@ namespace JoeFx
         bool                LoadFromInputStream         ( InputStream& input_stream );
 
     private:
-        bool                m_initialized = false;
+        bool                m_initialized;
         std::string         m_name;
         std::vector<Pass>   m_passes;
 

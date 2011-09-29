@@ -36,6 +36,7 @@
 namespace JoeFx
 {
     Context::Context ()
+    :m_initialized( false )
     {
     }
 

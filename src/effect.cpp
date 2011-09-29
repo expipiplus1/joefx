@@ -39,6 +39,7 @@ using namespace JoeMath;
 namespace JoeFx
 {
     Effect::Effect ()
+    :m_initialized( false )
     {
     }
 

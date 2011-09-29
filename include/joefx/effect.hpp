@@ -49,7 +49,7 @@ namespace JoeFx
         std::vector<Technique>::iterator end();
 
     private:
-        bool                    m_initialized = false;
+        bool                    m_initialized;
         std::vector<Technique>  m_techniques;
 
         static const u32  JFXC_FILE_MAGIC = 0x4358464A;

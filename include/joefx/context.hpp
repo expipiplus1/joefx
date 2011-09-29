@@ -47,7 +47,7 @@ namespace JoeFx
         Effect*             LoadCompiledEffect        ( std::string filename );
 
     private:
-        bool m_initialized = false;
+        bool m_initialized;
         std::vector<Effect*> m_effects;
 
         //

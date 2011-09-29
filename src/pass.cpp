@@ -41,6 +41,7 @@ using namespace JoeFile;
 namespace JoeFx
 {
     Pass::Pass ()
+    :m_initialized( false )
     {
     }
 

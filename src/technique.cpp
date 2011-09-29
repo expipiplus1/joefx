@@ -35,6 +35,7 @@
 namespace JoeFx
 {
     Technique::Technique ()
+    :m_initialized( false )
     {
     }
 
