@@ -31,7 +31,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <gl/glfw3.h>
+#include <GL/glfw3.h>
 #include <joefile/input_stream.hpp>
 #include <joemath/joemath.hpp>
 
