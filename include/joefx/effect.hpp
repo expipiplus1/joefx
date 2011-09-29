@@ -45,6 +45,9 @@ namespace JoeFx
 
         bool                LoadFromCompiledEffect   ( const std::string filename );
 
+        std::vector<Technique>::iterator begin();
+        std::vector<Technique>::iterator end();
+
     private:
         bool                    m_initialized = false;
         std::vector<Technique>  m_techniques;

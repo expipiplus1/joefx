@@ -46,6 +46,16 @@ namespace JoeFx
     {
     }
 
+    std::vector<Technique>::iterator Effect::begin()
+    {
+        return m_techniques.begin();
+    }
+
+    std::vector<Technique>::iterator Effect::end()
+    {
+        return m_techniques.end();
+    }
+
     bool Effect::LoadFromCompiledEffect ( const std::string filename )
     {
         InputStream input_stream;
